@@ -10,8 +10,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import javax.swing.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * @description: accessToken生成线程类
@@ -72,18 +75,19 @@ public class TokenScan implements Runnable {
             String url = gatewayHost.concat("/oauth2/token/getAccessToken");
             String timestamp = String.valueOf(System.currentTimeMillis());
             Map<String, String> parm = new HashMap<String, String>(5);
-            String scope = "app";
-//            parm.put("scope", scope);
+//            String scope = "app";
+            parm.put("scope", scope);
             parm.put("timestamp", timestamp);
             parm.put("appId", appId);
             parm.put("secret", secret);
             JSONObject result = null;
             try {
                 result = JSONObject.parseObject(GatewayAuth2.gatewayRequestJson(url, JSONObject.toJSONString(parm))).getJSONObject("data");
-                if (result !=null && result.getString("accessToken") != null) {
+                if (result !=null && result.containsKey("accessToken")) {
                     String accessToken = result.getString("accessToken");
-                    redisDao.set("accessToken", accessToken);
                     System.out.println("accessToken-=-=-=-=" + accessToken);
+                    redisDao.set("accessToken", accessToken);
+                    System.out.println("accessToken-=-=-=-=" + redisDao.get("accessToken"));
                 }
                 Thread.sleep(cycle * 60 * 1000);//3600000
             } catch (Exception e) {
@@ -93,5 +97,4 @@ public class TokenScan implements Runnable {
 
         }
     }
-
 }

@@ -14,8 +14,11 @@ package com.yunzhijia.appdemo.interceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.yunzhijia.appdemo.redis.TokenScan;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
@@ -28,6 +31,9 @@ import com.yunzhijia.appdemo.vo.UserContext;
 public class ContextInterceptor implements HandlerInterceptor, ApplicationContextAware {
 	// 上下文实例
 	private static ApplicationContext applicationContext;
+
+//	@Autowired
+//	private TokenScan tokenScan;
 
 	@Override
 	public void afterCompletion(HttpServletRequest arg0,
@@ -47,6 +53,12 @@ public class ContextInterceptor implements HandlerInterceptor, ApplicationContex
 		if(StringUtils.isEmpty(ticket) || StringUtils.isEmpty(appId)) throw new RuntimeException("ticket、appId必要参数不能为空！");
 		UserContext userContext = null;
 		try {
+
+//			// 执行线程类，缓存accessToken数据
+//			tokenScan.setAppId(appId);
+//			tokenScan.setScope("app");
+//			new Thread(tokenScan).start();
+
 			userContext = applicationContext.getBean(GatewayAuth2.class).getUserContext(ticket, appId);
 		} catch (Exception e) {
 			throw new RuntimeException("用户上下文件获取异常，请检查APP.SECRET配置参数！");

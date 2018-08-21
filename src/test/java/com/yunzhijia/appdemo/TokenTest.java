@@ -45,8 +45,14 @@ public class TokenTest {
     @Test
     public void testTokenRedis(){
 //        new TokenScan(appId,scope).run();
-        new Thread(new TokenScan(appId,scope)).start();
+//        new Thread(new TokenScan(appId,scope)).start();
 //        tokenScan.run();
+        tokenScan.setAppId(appId);
+        tokenScan.setScope("app");
+        new Thread(tokenScan).start();
+
+//        System.out.println(redisDao.get("accessToken"));
+
     }
 
     @Autowired
@@ -68,7 +74,7 @@ public class TokenTest {
         map.put("age","23");
         redisDao.set("str3",map);
 
-        System.out.println(redisDao.get("str2"));
+        System.out.println(redisDao.get("accessToken"));
     }
 
     @After
