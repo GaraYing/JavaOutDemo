@@ -14,6 +14,8 @@ package com.yunzhijia.appdemo.auth;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import com.yunzhijia.appdemo.redis.RedisDao;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,7 +37,9 @@ public class GatewayAuth2 {
 	private String erpSecret;
 	@Value("${YUNZHIJIA.GATEWAY.HOST}")
 	private String gatewayHost;
-	
+
+	@Autowired
+	private RedisDao redisDao;
 	@Autowired
 	private TokenService tokenService;
 	
@@ -58,7 +62,9 @@ public class GatewayAuth2 {
      */
     public UserContext getUserContext(String ticket, String appId) throws Exception {
     	String scope = "app";
-		String url = gatewayHost.concat("/ticket/user/acquirecontext?accessToken=").concat(tokenService.getAccessToken(appId, appSecret, null, scope));
+		String url = gatewayHost.concat("/ticket/user/acquirecontext?accessToken=")
+//				.concat(tokenService.getAccessToken(appId, appSecret, null, scope));
+				.concat(redisDao.get("accessToken").toString());
 		Map parm = new HashMap(2);
 		parm.put("appid", appId); parm.put("ticket", ticket);
 		Map headers = new HashMap(1); headers.put("Content-Type", APPLICATION_JSON);
