@@ -44,7 +44,7 @@ public class RedisTimeTask {
      */
     @Scheduled(initialDelay = 1000, fixedDelay = 1000 * 60 * 90)
     public void task() {
-        logger.info(new Date() + "定时任务获取accessToken数据存入redis......");
+        logger.info(new Date() + "定时任务获取accessToken数据开始存入redis......");
         this.run();
     }
 
@@ -61,7 +61,7 @@ public class RedisTimeTask {
             result = JSONObject.parseObject(GatewayAuth2.gatewayRequestJson(url, JSONObject.toJSONString(parm))).getJSONObject("data");
             if (result != null && result.containsKey("accessToken")) {
                 String accessToken = result.getString("accessToken");
-                redisDao.set("accessToken", accessToken);
+                redisDao.set("accessToken", accessToken,7000L);//设置失效时间
                 logger.info("accessToken已存入redis-=-=-=-"+accessToken);
             }
         } catch (Exception e) {
