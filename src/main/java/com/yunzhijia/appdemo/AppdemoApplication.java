@@ -31,11 +31,11 @@ public class AppdemoApplication extends SpringBootServletInitializer {
      * @return the application builder
      * @see SpringApplicationBuilder
      */
-    @Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder)
-    {
-        return super.configure(builder);
-    }
+//    @Override
+//    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder)
+//    {
+//        return super.configure(builder);
+//    }
 
 
     public static void myTimer(){
