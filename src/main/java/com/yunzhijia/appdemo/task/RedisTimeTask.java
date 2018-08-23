@@ -1,6 +1,7 @@
 package com.yunzhijia.appdemo.task;
 
 import com.alibaba.fastjson.JSONObject;
+import com.sun.corba.se.spi.ior.IdentifiableFactory;
 import com.yunzhijia.appdemo.auth.GatewayAuth2;
 import com.yunzhijia.appdemo.redis.RedisDao;
 import com.yunzhijia.appdemo.redis.TokenScan;
@@ -62,9 +63,11 @@ public class RedisTimeTask {
             if (result != null && result.containsKey("accessToken")) {
                 String accessToken = result.getString("accessToken");
                 redisDao.set("accessToken", accessToken,7000L);//设置失效时间
+                if (redisDao.get("accessToken") != null)
                 logger.info("accessToken已存入redis-=-=-=-"+accessToken);
             }
         } catch (Exception e) {
+            logger.info("redis存入accessToken出错了");
             e.printStackTrace();
         }
     }
