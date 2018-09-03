@@ -47,5 +47,6 @@ public class AppdemoApplication extends SpringBootServletInitializer {
                 System.out.println("------定时任务--------");
             }
         }, 0, 1000);
+
     }
 }
